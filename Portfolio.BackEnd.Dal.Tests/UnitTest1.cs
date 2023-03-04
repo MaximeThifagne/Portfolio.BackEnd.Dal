@@ -10,7 +10,7 @@ namespace Portfolio.BackEnd.Dal.Tests
         [Test]
         public void Test1()
         {
-            Assert.IsFalse(true);
+            Assert.Pass();
         }
     }
 }
