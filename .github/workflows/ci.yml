@@ -14,7 +14,7 @@ jobs:
     env:
       BUILD_CONFIG: 'Release'
       Solution_Name: Portfolio.BackEnd.Dal.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
-      Test_Project_Path: Portfolio.BackEnd.Dal.Tests\rotfolio.BackEnd.Dal.Tests.csproj   # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
+      Test_Project_Path: Portfolio.BackEnd.Dal.Tests\Portfolio.BackEnd.Dal.Tests.csproj   # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
 
     steps:
     - uses: actions/checkout@v2
@@ -33,5 +33,8 @@ jobs:
     - name: Build
       run: dotnet build $SOLUTION --configuration $BUILD_CONFIG --no-restore
 
-    - name: Run tests
-      run: dotnet test /p:Configuration=$env:BUILD_CONFIG --no-restore --no-build --verbosity normal
+    - name: Install NUnit.ConsoleRunner
+      run: nuget install NUnit.ConsoleRunner -Version 3.13.0 -DirectDownload -OutputDirectory .
+        
+    - name: Run UnitTests
+      run: ./NUnit.ConsoleRunner.3.13.0/tools/nunit3-console.exe  $Test_Project_Path.dll
