@@ -30,6 +30,6 @@ jobs:
       uses: battila7/get-version-action@v2
     - run: echo ${{ steps.get_version.outputs.version }}
     - name : Pack
-      run: dotnet pack -p:PackageVersion=${{ steps.get_version.outputs.version-without-v }} --no-build --output nupkgs
+      run: dotnet pack -p:PackageVersion=${{ get_version.outputs.version-without-v }} --no-build --output nupkgs
     - name: Publish
       run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
