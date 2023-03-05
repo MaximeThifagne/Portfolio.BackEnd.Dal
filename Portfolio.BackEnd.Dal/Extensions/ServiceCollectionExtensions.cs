@@ -6,11 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio.BackEnd.Common.Configuration;
 using Portfolio.BackEnd.Dal.Auth;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Portfolio.BackEnd.Dal.Configuration;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Portfolio.BackEnd.Dal.Extensions
 {
@@ -18,10 +15,10 @@ namespace Portfolio.BackEnd.Dal.Extensions
     {
         public static IPortfolioServiceCollection AddIdentityService(this IPortfolioServiceCollection portfolioServiceCollection)
         {
-            var portfolioConfiguration = BuildConfiguration(portfolioServiceCollection);
-            portfolioServiceCollection.ServiceCollection.AddSingleton(portfolioConfiguration);
+            var portfolioIdentityConfiguration = BuildConfiguration(portfolioServiceCollection);
+            portfolioServiceCollection.ServiceCollection.AddSingleton(portfolioIdentityConfiguration);
 
-            portfolioServiceCollection.ServiceCollection.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(portfolioConfiguration.SqlServerConnectionString));
+            portfolioServiceCollection.ServiceCollection.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(portfolioIdentityConfiguration.SqlServerConnectionString));
 
             portfolioServiceCollection.ServiceCollection.AddIdentity<IdentityUser, IdentityRole>()
                     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -41,9 +38,9 @@ namespace Portfolio.BackEnd.Dal.Extensions
                  {
                      ValidateIssuer = true,
                      ValidateAudience = true,
-                     ValidAudience = portfolioConfiguration.ValidAudience,
-                     ValidIssuer = portfolioConfiguration.ValidIssuer,
-                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(portfolioConfiguration.Secret))
+                     ValidAudience = portfolioIdentityConfiguration.ValidAudience,
+                     ValidIssuer = portfolioIdentityConfiguration.ValidIssuer,
+                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(portfolioIdentityConfiguration.Secret))
                  };
              });
 
@@ -52,10 +49,10 @@ namespace Portfolio.BackEnd.Dal.Extensions
             return portfolioServiceCollection;
         }
 
-        private static PortfolioConfiguration BuildConfiguration(IPortfolioServiceCollection portfolioServiceCollection)
+        private static PortfolioIdentityConfiguration BuildConfiguration(IPortfolioServiceCollection portfolioServiceCollection)
         {
-            var portfolioConfiguration = new PortfolioConfiguration();
-            portfolioServiceCollection.Configuration.GetSection("JWT").Bind(portfolioConfiguration);
+            var portfolioConfiguration = new PortfolioIdentityConfiguration();
+            portfolioServiceCollection.Configuration.GetSection("Portfolio:JWT").Bind(portfolioConfiguration);
 
             return portfolioConfiguration;
         }
