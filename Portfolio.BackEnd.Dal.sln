@@ -3,14 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portfolio.BackEnd.Dal", "Portfolio.BackEnd.Dal\Portfolio.BackEnd.Dal.csproj", "{A0D3DAE0-40AA-4A30-95E8-F654550731D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portfolio.BackEnd.Dal", "Portfolio.BackEnd.Dal\Portfolio.BackEnd.Dal.csproj", "{A0D3DAE0-40AA-4A30-95E8-F654550731D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portfolio.BackEnd.Dal.Tests", "Portfolio.BackEnd.Dal.Tests\Portfolio.BackEnd.Dal.Tests.csproj", "{AD2D8F53-EF1E-4AF3-9A2A-776CD6B50E40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portfolio.BackEnd.Dal.Tests", "Portfolio.BackEnd.Dal.Tests\Portfolio.BackEnd.Dal.Tests.csproj", "{AD2D8F53-EF1E-4AF3-9A2A-776CD6B50E40}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Éléments de solution", "Éléments de solution", "{56406DA7-3992-42E8-B7B3-8500A3529C1D}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
-		gitversion.yml = gitversion.yml
 	EndProjectSection
 EndProject
 Global
