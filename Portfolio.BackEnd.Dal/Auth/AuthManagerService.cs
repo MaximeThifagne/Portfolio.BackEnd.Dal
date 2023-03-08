@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio.BackEnd.Common.Models;
+using Portfolio.BackEnd.Dal.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -12,9 +13,9 @@ namespace Portfolio.BackEnd.Dal.Auth
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
+        private readonly PortfolioIdentityConfiguration _configuration;
 
-        public AuthManagerService(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthManagerService(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, PortfolioIdentityConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -117,11 +118,11 @@ namespace Portfolio.BackEnd.Dal.Auth
         #region PRIVATE
         private JwtSecurityToken GetToken(List<Claim> authClaims)
         {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Secret));
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidIssuer"],
-                audience: _configuration["JWT:ValidAudience"],
+                issuer: _configuration.ValidIssuer,
+                audience: _configuration.ValidAudience,
                 expires: DateTime.Now.AddHours(3),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
