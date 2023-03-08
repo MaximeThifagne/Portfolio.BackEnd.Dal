@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +25,8 @@ namespace Portfolio.BackEnd.Dal.Extensions
                     .AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultTokenProviders();
 
+            var eshopDecryptHelper = new PortfolioDecryptHelper(portfolioIdentityConfiguration.Secret);
+
             // Adding Authentication
             portfolioServiceCollection.ServiceCollection.AddAuthentication(options =>
             {
@@ -42,7 +45,24 @@ namespace Portfolio.BackEnd.Dal.Extensions
                      ValidIssuer = portfolioIdentityConfiguration.ValidIssuer,
                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(portfolioIdentityConfiguration.Secret))
                  };
+
+                 options.SecurityTokenValidators.Clear();
+                 options.SecurityTokenValidators.Add(new PortfolioSecurityTokenValidator(eshopDecryptHelper));
              });
+
+            portfolioServiceCollection.ServiceCollection.AddAuthorization(options =>
+            {
+                options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .AddAuthenticationSchemes("Bearer")
+                    .Build();
+
+                var approvedPolicyBuilder = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .AddAuthenticationSchemes("Bearer");
+
+                options.AddPolicy("approved", approvedPolicyBuilder.Build());
+            });
 
             portfolioServiceCollection.ServiceCollection.AddScoped<IAuthManagerService, AuthManagerService>();
 
